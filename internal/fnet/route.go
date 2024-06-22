@@ -1,6 +1,6 @@
 package fnet
 
-import "github.com/unhanded/flownet/internal/ifnet"
+import "github.com/unhanded/flownet/pkg/ifnet"
 
 // FRouteResult is the result of evaluating a route.
 type FRouteResult struct {
