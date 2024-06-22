@@ -2,14 +2,16 @@ package fnet
 
 import (
 	"fmt"
+
+	"github.com/unhanded/flownet/internal/ifnet"
 )
 
-type FRouter struct {
-	nodes []FNode
+type FNetImpl struct {
+	nodes []ifnet.Node
 }
 
-func (f *FRouter) Eval(r FRoute) (*FRouteResult, error) {
-	rr := &FRouteResult{NodesPassed: 0, Responses: []FTimeoutResponse{}}
+func (f *FNetImpl) Eval(r ifnet.Route) (ifnet.RouteResult, error) {
+	rr := &FRouteResult{NodesPassed: 0, Responses: []ifnet.Response{}}
 
 	for _, nodeId := range r.NodeIds() {
 		for _, node := range f.nodes {
@@ -28,16 +30,16 @@ func (f *FRouter) Eval(r FRoute) (*FRouteResult, error) {
 	return rr, nil
 }
 
-func (f *FRouter) AddNodes(nodes ...FNode) error {
+func (f *FNetImpl) AddNodes(nodes ...ifnet.Node) error {
 	for _, node := range nodes {
 		f.nodes = append(f.nodes, node)
 	}
 	return nil
 }
 
-func (f *FRouter) RemoveNode(node FNode) error {
+func (f *FNetImpl) RemoveNode(nodeId string) error {
 	for i, n := range f.nodes {
-		if n.Id() == node.Id() {
+		if n.Id() == nodeId {
 			f.nodes = append(f.nodes[:i], f.nodes[i+1:]...)
 			return nil
 		}
@@ -45,6 +47,6 @@ func (f *FRouter) RemoveNode(node FNode) error {
 	return fmt.Errorf("node not found")
 }
 
-func (f *FRouter) Nodes() []FNode {
+func (f *FNetImpl) Nodes() []ifnet.Node {
 	return f.nodes
 }
