@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/unhanded/flownet/internal/ifnet"
 	"github.com/unhanded/flownet/pkg/fnet"
+	"github.com/unhanded/flownet/pkg/ifnet"
 	"github.com/unhanded/luid/pkg/luid"
 )
 
