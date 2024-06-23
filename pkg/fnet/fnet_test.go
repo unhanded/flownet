@@ -31,6 +31,13 @@ func TestFNet(t *testing.T) {
 	flow := result.RelativeFlow()
 	b, _ = json.MarshalIndent(flow, "", "  ")
 	t.Logf("Flow:\n%s", b)
+
+	data := n[0].Data()
+	b, err = json.MarshalIndent(data, "", "  ")
+	if err != nil {
+		t.Errorf("Error: %s", err)
+	}
+	t.Logf("Data:\n%s", b)
 }
 
 // Convenience function to make a couple of test node.
@@ -66,6 +73,10 @@ func (n *SimpleNodeImplementation) GetTimeoutDuration(r ifnet.Route) float64 {
 // Name is also mandatory, but we are not using it in this example.
 func (n *SimpleNodeImplementation) Name() string {
 	return "NodeImplementation"
+}
+
+func (n *SimpleNodeImplementation) Data() map[string]interface{} {
+	return map[string]interface{}{"veryInterestingField": "superFascinatingValue"}
 }
 
 // RouteImplementation is a highly simplified implementation of a route structure.

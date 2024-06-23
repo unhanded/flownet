@@ -28,6 +28,7 @@ type Node interface {
 	Name() string
 	Id() string
 	GetTimeoutDuration(Route) float64
+	Data() map[string]interface{}
 }
 
 type Route interface {
