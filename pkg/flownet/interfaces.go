@@ -1,19 +1,19 @@
-package ifnet
+package flownet
 
 // FNet is the central interface for flownet.
-type FNet interface {
+type FNet[T any] interface {
 	// AddNodes adds nodes to the network, as one might expect.
-	AddNodes(...Node) error
+	AddNodes(...Node[T]) error
 	// Eval evaluates a route through the network.
-	Eval(Route) (RouteResult, error)
+	Eval(Probe) (RouteResult, error)
 	// Nodes() returns all nodes in the network.
-	Nodes() []Node
+	Nodes() []Node[T]
 	// RemoveNode discards a node in the network by node id.
 	RemoveNode(string) error
 }
 
 type RouteResult interface {
-	TimeoutResponses() []Response
+	Responses() []Response
 	RelativeFlow() []Response
 }
 
@@ -24,14 +24,14 @@ type Response interface {
 
 type Attributes map[string]uint32
 
-type Node interface {
+type Node[T any] interface {
 	Name() string
 	Id() string
-	GetTimeoutDuration(Route) float64
-	Data() map[string]interface{}
+	GetResistance(Probe) float64
+	Data() T
 }
 
-type Route interface {
+type Probe interface {
 	NodeIds() []string
 	Attributes() Attributes
 }

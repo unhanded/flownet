@@ -3,23 +3,24 @@ package fnet
 import (
 	"fmt"
 
-	"github.com/unhanded/flownet/pkg/ifnet"
+	"github.com/unhanded/flownet/pkg/flownet"
 )
 
-type FNetImpl struct {
-	nodes []ifnet.Node
+type Network[T any] struct {
+	nodes   []flownet.Node[T]
+	preLoad []flownet.Probe
 }
 
-func (f *FNetImpl) Eval(r ifnet.Route) (ifnet.RouteResult, error) {
-	rr := &FRouteResult{NodesPassed: 0, Responses: []ifnet.Response{}}
+func (f *Network[T]) Eval(r flownet.Probe) (flownet.RouteResult, error) {
+	rr := &ProbeResult{NodesPassed: 0, ProbeResponses: []flownet.Response{}}
 
 	for _, nodeId := range r.NodeIds() {
 		for _, node := range f.nodes {
 			if node.Id() == nodeId {
 				rr.NodesPassed++
-				rr.Responses = append(
-					rr.Responses,
-					FTimeoutResponse{NodeId: nodeId, TimeoutDuration: node.GetTimeoutDuration(r)},
+				rr.ProbeResponses = append(
+					rr.ProbeResponses,
+					Resistance{NodeId: nodeId, Res: node.GetResistance(r)},
 				)
 			}
 		}
@@ -30,14 +31,14 @@ func (f *FNetImpl) Eval(r ifnet.Route) (ifnet.RouteResult, error) {
 	return rr, nil
 }
 
-func (f *FNetImpl) AddNodes(nodes ...ifnet.Node) error {
+func (f *Network[T]) AddNodes(nodes ...flownet.Node[T]) error {
 	for _, node := range nodes {
 		f.nodes = append(f.nodes, node)
 	}
 	return nil
 }
 
-func (f *FNetImpl) RemoveNode(nodeId string) error {
+func (f *Network[T]) RemoveNode(nodeId string) error {
 	for i, n := range f.nodes {
 		if n.Id() == nodeId {
 			f.nodes = append(f.nodes[:i], f.nodes[i+1:]...)
@@ -47,6 +48,6 @@ func (f *FNetImpl) RemoveNode(nodeId string) error {
 	return fmt.Errorf("node not found")
 }
 
-func (f *FNetImpl) Nodes() []ifnet.Node {
+func (f *Network[T]) Nodes() []flownet.Node[T] {
 	return f.nodes
 }

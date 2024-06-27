@@ -1,16 +1,16 @@
-package fnet_test
+package runner_test
 
 import (
 	"encoding/json"
 	"testing"
 
-	"github.com/unhanded/flownet/pkg/fnet"
-	"github.com/unhanded/flownet/pkg/ifnet"
+	"github.com/unhanded/flownet/internal/runner"
+	"github.com/unhanded/flownet/pkg/flownet"
 	"github.com/unhanded/luid/pkg/luid"
 )
 
 func TestFNet(t *testing.T) {
-	fnt := fnet.New()
+	fnt := runner.New[DummyData]()
 	n := GetTestNodes()
 	fnt.AddNodes(n...)
 
@@ -42,10 +42,10 @@ func TestFNet(t *testing.T) {
 
 // Convenience function to make a couple of test node.
 // Uses the example implementation below.
-func GetTestNodes() []ifnet.Node {
+func GetTestNodes() []flownet.Node[DummyData] {
 	n1 := &SimpleNodeImplementation{id: luid.New().String(), val: 100}
 	n2 := &SimpleNodeImplementation{id: luid.New().String(), val: 180}
-	return []ifnet.Node{n1, n2}
+	return []flownet.Node[DummyData]{n1, n2}
 }
 
 // SimpleNodeImplementation is a highly simplified implementation of a node.
@@ -61,7 +61,7 @@ func (n *SimpleNodeImplementation) Id() string {
 	return n.id
 }
 
-func (n *SimpleNodeImplementation) GetTimeoutDuration(r ifnet.Route) float64 {
+func (n *SimpleNodeImplementation) GetResistance(r flownet.Probe) float64 {
 	attr := r.Attributes()
 	// If we are doing a smarter node, the attributes are the parameters that we use.
 	// But for now, we are just using a static value, so let's discard it.
@@ -75,13 +75,12 @@ func (n *SimpleNodeImplementation) Name() string {
 	return "NodeImplementation"
 }
 
-func (n *SimpleNodeImplementation) Data() map[string]interface{} {
-	return map[string]interface{}{"veryInterestingField": "superFascinatingValue"}
+func (n *SimpleNodeImplementation) Data() DummyData {
+	return DummyData{VeryInterestingField: "superFascinatingValue"}
 }
 
 // RouteImplementation is a highly simplified implementation of a route structure.
 // The route is just a sequence of node ids and attributes where applicable.
-// The other side of the same coin, so to speak.
 type RouteImplementation struct {
 	ids []string
 }
@@ -94,6 +93,10 @@ func (r *RouteImplementation) NodeIds() []string {
 	return ids
 }
 
-func (r *RouteImplementation) Attributes() ifnet.Attributes {
+func (r *RouteImplementation) Attributes() flownet.Attributes {
 	return map[string]uint32{"A": 1}
+}
+
+type DummyData struct {
+	VeryInterestingField string `json:"veryInterestingField"`
 }

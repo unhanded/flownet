@@ -1,29 +1,29 @@
 package fnet
 
-// FTimeoutResponse is a struct that represents a single response of a node.
-type FTimeoutResponse struct {
-	NodeId          string
-	TimeoutDuration float64
+// Resistance is a struct that represents a single response of a node.
+type Resistance struct {
+	NodeId string
+	Res    float64
 }
 
-func (r FTimeoutResponse) Id() string {
+func (r Resistance) Id() string {
 	return r.NodeId
 }
 
-func (r FTimeoutResponse) Value() float64 {
-	return r.TimeoutDuration
+func (r Resistance) Value() float64 {
+	return r.Res
 }
 
-// FRelativeFlowResponse is a struct that represents the flow value of a node relative to the entire route.
-type FRelativeFlowResponse struct {
+// RelativeResistance is a struct that represents the flow value of a node relative to the entire route.
+type RelativeResistance struct {
 	NodeId string
 	Flow   float64
 }
 
-func (r FRelativeFlowResponse) Id() string {
+func (r RelativeResistance) Id() string {
 	return r.NodeId
 }
 
-func (r FRelativeFlowResponse) Value() float64 {
+func (r RelativeResistance) Value() float64 {
 	return r.Flow
 }
