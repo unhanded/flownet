@@ -15,6 +15,9 @@ func (rr *ProbeResult) validate() bool {
 	if rr.NodesPassed != int64(len(rr.ProbeResponses)) {
 		return false
 	}
+	if rr.NodesPassed == 0 {
+		return false
+	}
 	return true
 }
 

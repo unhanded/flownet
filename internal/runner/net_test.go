@@ -40,6 +40,19 @@ func TestFNet(t *testing.T) {
 	t.Logf("Data:\n%s", b)
 }
 
+func TestFNetError(t *testing.T) {
+	fnt := runner.New[DummyData]()
+	n := GetTestNodes()
+	fnt.AddNodes(n...)
+
+	r := RouteImplementation{ids: []string{}}
+
+	_, err := fnt.Eval(&r)
+	if err == nil {
+		t.Errorf("Expected error, got nil")
+	}
+}
+
 // Convenience function to make a couple of test node.
 // Uses the example implementation below.
 func GetTestNodes() []flownet.Node[DummyData] {
