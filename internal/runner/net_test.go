@@ -53,6 +53,20 @@ func TestFNetError(t *testing.T) {
 	}
 }
 
+func TestFNetRemove(t *testing.T) {
+	fnt := runner.New[DummyData]()
+	n := GetTestNodes()
+	fnt.AddNodes(n...)
+	if len(fnt.Nodes()) != 2 {
+		t.Errorf("Expected 2 nodes, got %d", len(fnt.Nodes()))
+	}
+	fnt.RemoveNode(n[0].Id())
+
+	if len(fnt.Nodes()) != 1 {
+		t.Errorf("Expected 1 nodes after delete, got %d", len(fnt.Nodes()))
+	}
+}
+
 // Convenience function to make a couple of test node.
 // Uses the example implementation below.
 func GetTestNodes() []flownet.Node[DummyData] {
